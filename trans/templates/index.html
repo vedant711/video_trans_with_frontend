@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- <script>
+        var mysql = require('mysql'); 
+        
+        
+
+        // window.onload = ()=> {
+            // date = new Date();
+            // var dd= date.getDate();
+            // var mm = date.getMonth() +1;
+            // var yyyy = date.getFullYear();
+            // var current_time = date.getHours()+":"+date.getMinutes()+":"+ date.getSeconds();
+            // var current_date = yyyy+'-'+mm+'-'+dd + ' ' + current_time
+            // document.getElementById('date').value = current_date;
+            // mysql = new MySQL()
+            var con = mysql.createConnection({  
+                host: "localhost",  
+                user: "root",  
+                password: "12345678",  
+                database: "translator1"  
+            });  
+            console.log('Connection Established')
+            const write_data = () => {
+                con.connect(function(err) {  
+                    if (err) throw err;  
+                    console.log("Connected!");  
+                    var sql = "INSERT INTO logs (status, start_datetime) VALUES ('waiting for video', '" + current_date +"')";  
+                    con.query(sql, function (err, result) {  
+                        if (err) throw err;  
+                        // console.log("1 record inserted");  
+                    });
+                })   
+            }
+            document.getElementById('submit').onclick = write_data()
+        // }
+        
+  
+    </script> -->
+    <form action="" method="post" enctype="multipart/form-data">
+        {% if messages %}
+        {% for m in messages %}
+        <p>{{m}}</p>
+        {% endfor %}
+        {% endif %}
+        {% csrf_token %}
+        <!-- <input type="file" name="file" id="" placeholder="Upload Video"> -->
+        <!-- {{form}} -->
+        <input type="text" name="url" id="url" placeholder="Enter the URL">
+        <input type="text" name="callback" id="" placeholder="Enter the Callback URL">
+        <!-- <input type="text" name="date" id="date"> -->
+        <input type="submit" value="Submit" id="submit">
+        {% if tracking_url %}
+            <a href={{tracking_url}}>Track the process {{queueId}}</a>
+        {% endif %}
+    </form>
+</body>
+</html>
