@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     <title>Document</title>
 </head>
 <body>
@@ -44,22 +46,44 @@
         
   
     </script> -->
-    <form action="" method="post" enctype="multipart/form-data">
+    <script>
+        const redirect = (user) => {
+            window.location = '/view/' + user
+        }
+        const sub = () => {
+            if (document.getElementById('url').value !== '' && document.getElementById('callback').value !== ''){
+                document.getElementById('url_form').submit();
+            } else {
+                window.alert('Enter the details correctly')
+            }
+
+        }
+    </script>
+    <div id="root">
+        <div class="container">
+    <form action="" method="post" enctype="multipart/form-data" style="width:100%" id="url_form">
         {% if messages %}
         {% for m in messages %}
         <p>{{m}}</p>
         {% endfor %}
         {% endif %}
         {% csrf_token %}
+        <h1>Video Translation Tool</h1>
         <!-- <input type="file" name="file" id="" placeholder="Upload Video"> -->
         <!-- {{form}} -->
         <input type="text" name="url" id="url" placeholder="Enter the URL">
-        <input type="text" name="callback" id="" placeholder="Enter the Callback URL">
+        <input type="text" name="callback" id="callback" placeholder="Enter the Callback URL">
         <!-- <input type="text" name="date" id="date"> -->
-        <input type="submit" value="Submit" id="submit">
+        <!-- <input type="submit" value="Submit" id="submit"> -->
+    </form>
+    <button onclick="sub()">Submit</button>
+
+        <button onclick="redirect('{{user}}')">Dashboard</button>
         {% if tracking_url %}
             <a href={{tracking_url}}>Track the process {{queueId}}</a>
         {% endif %}
-    </form>
+   
+</div>
+</div>
 </body>
 </html>

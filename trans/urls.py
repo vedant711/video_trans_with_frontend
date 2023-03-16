@@ -9,5 +9,8 @@ urlpatterns =[
     path('upload',views.upload),
     path('auth_token',views.user_token_view),
     path('check',views.check),
-    path('track/<queueId>',views.track)
+    path('track/<queueId>',views.track),
+    path('logout',views.logout_view),
+    path('view/<user>',views.indi_page),
+
 ]

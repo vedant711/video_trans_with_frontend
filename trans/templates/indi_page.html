@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const redirect = (queueId) => {
+            window.location = '/track/'+queueId
+        }
+    </script>
+    <div id="root">
+        <div class="header">
+        <a href="/upload"><p>Translate Video</p></a>
+        <!-- <a href="/indi-log/{{user}}"><p>Logs for Videos</p></a> -->
+        <a href="/logout"><p>Logout</p></a>
+
+        
+        </div>
+        <div class="container indi">
+            {% if messages %}
+        {% for m in messages %}
+        <p>{{m}}</p>
+        {% endfor %}
+        {% endif %}
+            <h1>Welcome {{user}}</h1>
+            <h2>Have a look at all your requests</h2>
+            {% if logs %}
+            <table>
+                <tr>
+                    <th>Source URL</th>
+                    <th>Callback URL</th>
+                    <th>Status</th>
+                    <th>Start Date & Time</th>
+                    <th>Queue ID</th>
+
+                </tr>
+                {% for log in logs %}
+                    <tr style="cursor: pointer;" onclick="redirect('{{log.queueId}}')">
+                        <td>{{log.source}}</td>
+                        <td>{{log.callback_url}}</td>
+                        <td>{{log.status}}</td>
+                        <td>{{log.start_datetime}}</td>
+                        <td>{{log.queueId}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,13 +1,13 @@
 from django.shortcuts import render,redirect,HttpResponse
 from django.http import JsonResponse
 from django.contrib import messages
-import urllib.request
+# import urllib.request
 from django.views.decorators.csrf import csrf_exempt
 # import gdown
 from .models import Logs
 import os,shutil
 # from .forms import UploadFileForm
-from .forms import UploadFileForm
+# from .forms import UploadFileForm
 from datetime import datetime
 # import re
 from django.views.decorators.csrf import csrf_exempt
@@ -16,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User,auth
+from django.contrib.auth import logout
 from threading import Thread
 import subprocess
 import hashlib
@@ -77,23 +78,26 @@ def signup1(request):
     return render(request,'create_acc.html')
 
 def index(request):
-    if request.method=='POST':
-        username=request.POST['username']
-        pass1=request.POST['password']
-        user=auth.authenticate(username=username,password=pass1)
-        if user is not None:
-            auth.login(request,user)
-            # return render(request,'index.html')
-            # print(user)
-            # return redirect('/auth_token')
-            return redirect('/upload')
-        else:
-            messages.info(request,'Invalid credentials')
-            return render(request,'login.html')
-    return render(request,'login.html')
+    if request.user.is_authenticated: return redirect(f'/view/{request.user}')
+    else:
+        if request.method=='POST':
+            username=request.POST['username']
+            pass1=request.POST['password']
+            user=auth.authenticate(username=username,password=pass1)
+            if user is not None:
+                auth.login(request,user)
+                # return render(request,'index.html')
+                # print(user)
+                # return redirect('/auth_token')
+                return redirect(f'/view/{user}')
+            else:
+                messages.info(request,'Invalid credentials')
+                return render(request,'login.html')
+        return render(request,'login.html')
 
 @login_required(login_url='/')
 def upload(request):
+    context = {'user':request.user}
     if request.method=='POST':
         url = request.POST['url']
         callback = request.POST['callback']
@@ -141,9 +145,9 @@ def upload(request):
             tracking_url =''
             # os.chdir('static/uploaded/')
     # context = {'form' : UploadFileForm()}
-        context = {'tracking_url': tracking_url,'queueId':log1.queueId}
-        return render(request,'index.html',context)
-    return render(request,'index.html')
+        context = {'tracking_url': tracking_url,'queueId':log1.queueId,'user':request.user}
+    return render(request,'index.html',context)
+    # return render(request,'index.html')
     
 
 @csrf_exempt
@@ -245,16 +249,31 @@ def check(request):
 def track(request,queueId):
     try:
         log = Logs.objects.get(queueId=queueId)
-        # print(request.user)
-        if log.user == request.user:
+        # print(request.user,log.user)
+        # print(type(request.user),type(log.user))
+        if log.user == str(request.user):
             id = log.id
             file = open(f'/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded/logs/log{id}.txt','r',encoding='utf-8')
             output = list(file.readlines())
             file.close()
             context = {'output':output,'queueId':queueId}
         else:
-            messages.info(request,'Bad Request!\nYou cannot access other users request.')
-            return redirect('/upload')
+            messages.info(request,"Bad Request!\nYou cannot access other user's request.")
+            return redirect(f'/view/{request.user}')
     except:
         context = {'output':'','queueId':queueId}
     return render(request,'track.html',context)
+
+@login_required(login_url='/')
+def indi_page(request,user):
+    logs = Logs.objects.filter(user=request.user).all()
+    context={'logs':logs}
+    # print(logs)
+    return render(request,'indi_page.html',context)
+
+def logout_view(request):
+    try:
+        logout(request)
+        return redirect('/')
+    except:
+        messages.info(request,'Unable to logout')
