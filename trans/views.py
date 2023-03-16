@@ -92,6 +92,7 @@ def index(request):
             return render(request,'login.html')
     return render(request,'login.html')
 
+@login_required(login_url='/')
 def upload(request):
     if request.method=='POST':
         url = request.POST['url']
@@ -105,6 +106,7 @@ def upload(request):
         log.status = 'waiting for video'
         log.source = url
         log.callback_url = callback
+        log.user = request.user
         log.save()
         log1 = Logs.objects.get(start_datetime = st_dt,source=url,callback_url=callback)
         id = log1.id
@@ -130,6 +132,7 @@ def upload(request):
         os.chdir('trans')
         # os.system(f'python3 pivot_control.py {log1.path} {id}')
         mess = video_processing(url,id)
+        # tracking_url = ''
         if mess == 'success':
             messages.info(request,'Video Translation started successfully')
             tracking_url = f'/track/{log1.queueId}'
@@ -138,8 +141,10 @@ def upload(request):
             tracking_url =''
             # os.chdir('static/uploaded/')
     # context = {'form' : UploadFileForm()}
-    context = {'tracking_url': tracking_url,'queueId':log1.queueId}
-    return render(request,'index.html',context)
+        context = {'tracking_url': tracking_url,'queueId':log1.queueId}
+        return render(request,'index.html',context)
+    return render(request,'index.html')
+    
 
 @csrf_exempt
 def api(request):
@@ -235,15 +240,21 @@ def check(request):
         return HttpResponse('waiting for response')
     except:
         return JsonResponse({'status':500,'message':'Unexpected Error Occured'})
-    
+
+@login_required(login_url='/')    
 def track(request,queueId):
     try:
         log = Logs.objects.get(queueId=queueId)
-        id = log.id
-        file = open(f'/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded/logs/log{id}.txt','r',encoding='utf-8')
-        output = list(file.readlines())
-        file.close()
-        context = {'output':output,'queueId':queueId}
+        # print(request.user)
+        if log.user == request.user:
+            id = log.id
+            file = open(f'/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded/logs/log{id}.txt','r',encoding='utf-8')
+            output = list(file.readlines())
+            file.close()
+            context = {'output':output,'queueId':queueId}
+        else:
+            messages.info(request,'Bad Request!\nYou cannot access other users request.')
+            return redirect('/upload')
     except:
         context = {'output':'','queueId':queueId}
     return render(request,'track.html',context)
