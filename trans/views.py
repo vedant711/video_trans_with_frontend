@@ -31,6 +31,21 @@ def handle_uploaded_file(f,id,ext):
         for chunk in f.chunks():
             destination.write(chunk)
 
+
+import logging
+
+def foo(request):
+    # logging.basicConfig(level=logging.INFO)
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+        
+    some_logger = logging.getLogger(__name__)
+    some_logger.info('Your log message... IP:' + ip)
+    # print(some_logger)
+
 def video_processing(url,id):
     try:
         # log1 = Logs.objects.get(start_datetime = st_dt,source=url)
@@ -55,6 +70,7 @@ def video_processing(url,id):
 
 @login_required(login_url='/')
 def user_token_view(request):
+    foo(request)
     try:
         token = Token.objects.create(user=request.user)
         return render(request, 'user_token.html', {'token': token.key})
@@ -62,6 +78,7 @@ def user_token_view(request):
         return HttpResponse('Already created the API key')
 
 def signup1(request):
+    foo(request)
     if request.method=="POST":
         username=request.POST['username']       
         pass1=request.POST['password']
@@ -78,6 +95,7 @@ def signup1(request):
     return render(request,'create_acc.html')
 
 def index(request):
+    foo(request)
     if request.user.is_authenticated: return redirect(f'/view/{request.user}')
     else:
         if request.method=='POST':
@@ -97,6 +115,7 @@ def index(request):
 
 @login_required(login_url='/')
 def upload(request):
+    foo(request)
     context = {'user':request.user}
     if request.method=='POST':
         url = request.POST['url']
@@ -152,6 +171,7 @@ def upload(request):
 
 @csrf_exempt
 def api(request):
+    foo(request)
     try:
         # url = request.GET.get('url')
         # callback_url = request.GET.get('callback')
@@ -235,6 +255,7 @@ def api(request):
 
 @csrf_exempt
 def check(request):
+    foo(request)
     try:
         if request.method == 'POST':
             # out_url = request.GET.get('url')
@@ -247,6 +268,7 @@ def check(request):
 
 @login_required(login_url='/')    
 def track(request,queueId):
+    foo(request)
     try:
         log = Logs.objects.get(queueId=queueId)
         # print(request.user,log.user)
@@ -266,12 +288,14 @@ def track(request,queueId):
 
 @login_required(login_url='/')
 def indi_page(request,user):
+    foo(request)
     logs = Logs.objects.filter(user=request.user).all()
     context={'logs':logs}
     # print(logs)
     return render(request,'indi_page.html',context)
 
 def logout_view(request):
+    foo(request)
     try:
         logout(request)
         return redirect('/')

@@ -17,6 +17,89 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import logging
+# from . import settings
+
+# class IPAddressFilter(logging.Filter):
+
+#     def filter(self, record):
+#         if hasattr(record, 'request'):
+#             x_forwarded_for = record.request.META.get('HTTP_X_FORWARDED_FOR')
+#             if x_forwarded_for:
+#                 record.ip = x_forwarded_for.split(',')[0]
+#             else:
+#                 record.ip = record.request.META.get('REMOTE_ADDR')
+#         return True
+
+# print(ip)
+# LOGGING = {
+#     "version": 1,
+#     "formatters": {
+#         "request_formatter": {
+#             "format": "%(asctime)s  - %(name)s - %(ip)s - %(levelname)s -  %(message)s",
+#             "datefmt": "%Y-%m-%d %H:%M:%S"
+#         },
+#     },
+#     "handlers": {
+#         "request": {
+#             "level": "INFO",
+#             "class": "logging.FileHandler",
+#             "formatter": "request_formatter",
+#             "filename": "debug.log",
+#             # "maxBytes": 1024000,
+#             # "backupCount": 3
+#         }
+#     },
+#     'filters': {
+#         'add_ip_address': {
+#             '()': 'trans.ip_catcher.IPAddressFilter' # You can move IPAddressFilter class from settings.py to another location (e.g., apps.other.filters.IPAddressFilter)
+#         }
+#     },
+#     "loggers": {
+#         'django.request': {
+#             "level": "INFO",
+#             'filters': ['add_ip_address'],
+#              "handlers": ["request"]
+#         },
+#     },
+#     "disable_existing_loggers": False
+# }
+
+LOGGING = {
+    'version': 1,
+    # 'disable_existing_loggers': False,
+    "formatters": {
+        "request_formatter": {
+            "format": "%(asctime)s - %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'formatter':'request_formatter',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'trans.views': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        # 'apps': {
+        #     'handlers': ['file'],
+        #     'level': 'WARNING',
+        #     'propagate': True,
+        # },
+    },
+}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
