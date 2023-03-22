@@ -14,3 +14,6 @@ urlpatterns =[
     path('view/<user>',views.indi_page),
 
 ]
+
+handler404 = 'views.error404'
+handler500 = 'views.error500'
