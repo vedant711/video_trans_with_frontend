@@ -1,6 +1,8 @@
 from django.urls import path
 
 from . import views
+from django.views.generic.base import RedirectView
+
 
 urlpatterns =[
     path('',views.index,name='index'),
@@ -15,5 +17,5 @@ urlpatterns =[
 
 ]
 
-handler404 = 'views.error404'
-handler500 = 'views.error500'
+handler404 = 'trans.views.error404'
+handler500 = 'trans.views.error500'

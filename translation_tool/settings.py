@@ -14,6 +14,10 @@ from pathlib import Path
 import os
 # import rest_framework
 
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
+mimetypes.add_type("text/html", ".html", True)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -65,41 +69,41 @@ import logging
 #     "disable_existing_loggers": False
 # }
 
-LOGGING = {
-    'version': 1,
-    # 'disable_existing_loggers': False,
-    "formatters": {
-        "request_formatter": {
-            "format": "%(asctime)s - %(message)s",
-            "datefmt": "%Y-%m-%d %H:%M:%S"
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'formatter':'request_formatter',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'trans.views': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        # 'apps': {
-        #     'handlers': ['file'],
-        #     'level': 'WARNING',
-        #     'propagate': True,
-        # },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     # 'disable_existing_loggers': False,
+#     "formatters": {
+#         "request_formatter": {
+#             "format": "%(asctime)s - %(message)s",
+#             "datefmt": "%Y-%m-%d %H:%M:%S"
+#         },
+#     },
+#     'handlers': {
+#         'file': {
+#             'level': 'INFO',
+#             'formatter':'request_formatter',
+#             'class': 'logging.FileHandler',
+#             'filename': 'debug.log',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#         'trans.views': {
+#             'handlers': ['file'],
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#         # 'apps': {
+#         #     'handlers': ['file'],
+#         #     'level': 'WARNING',
+#         #     'propagate': True,
+#         # },
+#     },
+# }
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -108,7 +112,7 @@ LOGGING = {
 SECRET_KEY = 'django-insecure-+9h9ez7irsc+8d6cbxy%%9)&-2a*_e3x4rl0d!iaw6!tr@wpk_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -219,7 +223,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'trans/static'),

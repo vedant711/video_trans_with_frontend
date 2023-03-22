@@ -304,7 +304,7 @@ def logout_view(request):
         messages.info(request,'Unable to logout')
 
 
-def error404(request):
+def error404(request,exception):
     return render(request,'404.html')
 
 def error500(request):
