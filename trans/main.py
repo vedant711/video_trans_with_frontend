@@ -148,8 +148,8 @@ if __name__ == '__main__':
             mydb.commit()
             mycursor.execute(f"SELECT * FROM logs WHERE id={id}")
             mycursor_obj_output = mycursor.fetchone()
-            callback_url,queue_id = mycursor_obj_output[5],mycursor_obj_output[6]
-            print(callback_url,queue_id)
+            callback_url,queue_id,email = mycursor_obj_output[5],mycursor_obj_output[6],mycursor_obj_output[8]
+            # print(callback_url,queue_id)
             try:
                 # load_dotenv()
 
@@ -173,15 +173,43 @@ if __name__ == '__main__':
                 # print(r.json())
                 url_id = r.json()['id']
                 output_url = f'https://drive.google.com/uc?id={url_id}'
-                r1=requests.post(callback_url,data=json.dumps({
-                    'status':200,
-                    'output':output_url,
-                    'queue_id':queue_id
-                }))
-                txt = open(f'logs/log{id}.txt','a+',encoding='utf-8')
-                txt.write(f'Response for callback\n')
-                txt.write(f'{r1.json()}')
-                txt.close()
+                print(callback_url,email)
+                if callback_url != '' and callback_url!=None:
+                    r1=requests.post(callback_url,data=json.dumps({
+                        'status':200,
+                        'output':output_url,
+                        'queue_id':queue_id
+                    }))
+                    txt = open(f'logs/log{id}.txt','a+',encoding='utf-8')
+                    txt.write(f'Response for callback\n')
+                    txt.write(f'{r1.json()}')
+                    txt.close()
+                else:
+                    print(f'sending email to {email}')
+                    password = os.environ['EMAIL_PASSWORD']
+                    import smtplib, ssl
+
+                    port = 587  # For starttls
+                    smtp_server = "smtp.gmail.com"
+                    sender_email = "vedant.dict19@sot.pdpu.ac.in"
+                    # receiver_email = "your@gmail.com"
+                    # password = input("Type your password and press enter:")
+
+                    context = ssl.create_default_context()
+                    # print(message)
+                    with smtplib.SMTP(smtp_server, port) as server:
+                        # server.ehlo()  # Can be omitted
+                        server.starttls(context=context)
+                        # server.ehlo()  # Can be omitted
+                        message = f"\nYou can find your output at {output_url} for the queue ID : {queue_id}"
+
+                        server.login(sender_email, password)
+                        server.sendmail(sender_email, email,message)
+                    txt = open(f'logs/log{id}.txt','a+',encoding='utf-8')
+                    txt.write(f'Response for callback\n')
+                    txt.write(f'Queue ID: {queue_id}\nOutput URL: {output_url}')
+                    txt.close()
+                
                 mycursor.execute(f'UPDATE logs SET status="successful" WHERE id={int(id)}')
                 mydb.commit()
             except:

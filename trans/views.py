@@ -119,7 +119,7 @@ def upload(request):
     context = {'user':request.user}
     if request.method=='POST':
         url = request.POST['url']
-        callback = request.POST['callback']
+        email = request.POST['email']
         # os.chdir('/root/video_trans/translation_tool')
         os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool')
 
@@ -128,10 +128,10 @@ def upload(request):
         st_dt = log.start_datetime
         log.status = 'waiting for video'
         log.source = url
-        log.callback_url = callback
+        log.email = email
         log.user = request.user
         log.save()
-        log1 = Logs.objects.get(start_datetime = st_dt,source=url,callback_url=callback)
+        log1 = Logs.objects.get(start_datetime = st_dt,source=url,email=email)
         id = log1.id
         log1.queueId = hashlib.md5(str(id).encode("utf-8")).hexdigest()
         log1.save()
@@ -159,6 +159,7 @@ def upload(request):
         if mess == 'success':
             messages.info(request,'Video Translation started successfully')
             tracking_url = f'/track/{log1.queueId}'
+            return redirect(f'/view/{request.user}')
         else:
             messages.info(request, 'There was some error processing the video')
             tracking_url =''

@@ -51,7 +51,7 @@
             window.location = '/view/' + user
         }
         const sub = () => {
-            if (document.getElementById('url').value !== '' && document.getElementById('callback').value !== ''){
+            if (document.getElementById('url').value !== '' && document.getElementById('email').value !== ''){
                 document.getElementById('url_form').submit();
             } else {
                 window.alert('Enter the details correctly')
@@ -72,7 +72,7 @@
         <!-- <input type="file" name="file" id="" placeholder="Upload Video"> -->
         <!-- {{form}} -->
         <input type="text" name="url" id="url" placeholder="Enter the URL">
-        <input type="text" name="callback" id="callback" placeholder="Enter the Callback URL">
+        <input type="text" name="email" id="email" placeholder="Enter your Email">
         <!-- <input type="text" name="date" id="date"> -->
         <!-- <input type="submit" value="Submit" id="submit"> -->
     </form>

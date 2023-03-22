@@ -14,6 +14,112 @@
         const redirect = (queueId) => {
             window.location = '/track/'+queueId
         }
+        setTimeout(function(){
+            window.location.reload(1);
+        }, 30000);
+        
+
+        // document.getElementById('success').onclick = () => {
+            // document.getElementById('success').classList.add('selected')
+            // document.getElementById('unsuccess').classList.remove('selected')
+            // document.getElementById('running').classList.remove('selected')
+            // document.getElementById('waiting').classList.remove('selected')
+        // }
+        // document.getElementById('unsuccess').onclick = () => {
+        //     document.getElementById('success').classList.remove('selected')
+        //     document.getElementById('unsuccess').classList.add('selected')
+        //     document.getElementById('running').classList.remove('selected')
+        //     document.getElementById('waiting').classList.remove('selected')
+        // }
+        // document.getElementById('running').onclick = () => {
+        //     document.getElementById('success').classList.remove('selected')
+        //     document.getElementById('unsuccess').classList.remove('selected')
+        //     document.getElementById('running').classList.add('selected')
+        //     document.getElementById('waiting').classList.remove('selected')
+        // }
+        // document.getElementById('waiting').onclick = () => {
+        //     document.getElementById('success').classList.remove('selected')
+        //     document.getElementById('unsuccess').classList.remove('selected')
+        //     document.getElementById('running').classList.remove('selected')
+        //     document.getElementById('waiting').classList.add('selected')
+        // }
+        const select = (id) => {
+            if (id==='success') {
+                document.getElementById('success').classList.add('selected')
+                document.getElementById('unsuccess').classList.remove('selected')
+                document.getElementById('running').classList.remove('selected')
+                document.getElementById('waiting').classList.remove('selected')
+                document.getElementById('success-logs').style.display = 'block'
+                document.getElementById('unsuccess-logs').style.display = 'none'
+                document.getElementById('running-logs').style.display = 'none'
+                document.getElementById('waiting-logs').style.display = 'none'
+
+            }
+            else if (id==='unsuccess') {
+                document.getElementById('success').classList.remove('selected')
+                document.getElementById('unsuccess').classList.add('selected')
+                document.getElementById('running').classList.remove('selected')
+                document.getElementById('waiting').classList.remove('selected')
+                document.getElementById('success-logs').style.display = 'none'
+                document.getElementById('unsuccess-logs').style.display = 'block'
+                document.getElementById('running-logs').style.display = 'none'
+                document.getElementById('waiting-logs').style.display = 'none'
+            }
+            else if (id==='running') {
+                document.getElementById('success').classList.remove('selected')
+                document.getElementById('unsuccess').classList.remove('selected')
+                document.getElementById('running').classList.add('selected')
+                document.getElementById('waiting').classList.remove('selected')
+                document.getElementById('success-logs').style.display = 'none'
+                document.getElementById('unsuccess-logs').style.display = 'none'
+                document.getElementById('running-logs').style.display = 'block'
+                document.getElementById('waiting-logs').style.display = 'none'
+            }
+            else if (id==='waiting') {
+                document.getElementById('success').classList.remove('selected')
+                document.getElementById('unsuccess').classList.remove('selected')
+                document.getElementById('running').classList.remove('selected')
+                document.getElementById('waiting').classList.add('selected')
+                document.getElementById('success-logs').style.display = 'none'
+                document.getElementById('unsuccess-logs').style.display = 'none'
+                document.getElementById('running-logs').style.display = 'none'
+                document.getElementById('waiting-logs').style.display = 'block'
+            }
+            // document.createElement('table');
+            // let headers = ['Source URL','Email','Status','Start Date & Time','Queue ID']
+            // let l = []
+            // {% for log in logs %}
+            //     a={
+            //         source:'{{log.source}}',
+            //         email:'{{log.email}}',
+            //         status:'{{log.status}}',
+            //         datetime:'{{log.start_datetime}}',
+            //         queueId:'{{log.queueId}}',
+
+
+            //     }
+            //     l.push(a)
+            // {% endfor %}
+            // // console.log(l)
+            // let table = document.getElementById("table");
+            // // let thead = table.createTHead();
+            // for (let r of l) {
+            //     let row = table.insertRow();
+            //     for (let key in r) {
+            //         let cell = row.insertCell();
+            //         let text = document.createTextNode(r[key]);
+            //         cell.appendChild(text);
+            //     }
+            // }
+
+            // // for (let head in headers) {
+            // //     let th = document.createElement("th");
+            // //     let text = document.createTextNode(headers[head]);
+            // //     th.appendChild(text)
+            // //     row.appendChild(th)
+            // // }
+
+        }
     </script>
     <div id="root">
         <div class="header">
@@ -24,34 +130,121 @@
         
         </div>
         <div class="container indi">
+            
             {% if messages %}
-        {% for m in messages %}
-        <p>{{m}}</p>
-        {% endfor %}
-        {% endif %}
+            {% for m in messages %}
+            <p>{{m}}</p>
+            {% endfor %}
+            {% endif %}
             <h1>Welcome {{user}}</h1>
             <h2>Have a look at all your requests</h2>
-            {% if logs %}
-            <table>
+            <div class="choose">
+                <p id="success" onclick="select(this.id)" class="selected">Successful</p>
+                <p id="unsuccess" onclick="select(this.id)">Unsuccessful</p>
+                <p id="running" onclick="select(this.id)">Running</p>
+                <p id="waiting" onclick="select(this.id)">Waiting</p>
+            </div>
+            <!-- <table id="table">
                 <tr>
                     <th>Source URL</th>
-                    <th>Callback URL</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Start Date & Time</th>
+                    <th>Queue ID</th>
+
+                </tr>
+            </table> -->
+            <!-- {% if logs %} -->
+            <table id="success-logs" style="display: block;">
+                <tr>
+                    <th>Source URL</th>
+                    <th>Email</th>
                     <th>Status</th>
                     <th>Start Date & Time</th>
                     <th>Queue ID</th>
 
                 </tr>
                 {% for log in logs %}
+                {% if log.status == 'successful' %}
                     <tr style="cursor: pointer;" onclick="redirect('{{log.queueId}}')">
                         <td>{{log.source}}</td>
-                        <td>{{log.callback_url}}</td>
+                        <td>{{log.email}}</td>
                         <td>{{log.status}}</td>
                         <td>{{log.start_datetime}}</td>
                         <td>{{log.queueId}}</td>
                     </tr>
+                {% endif %}
                 {% endfor %}
             </table>
-            {% endif %}
+
+            <table id="unsuccess-logs" style="display: none;">
+                <tr>
+                    <th>Source URL</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Start Date & Time</th>
+                    <th>Queue ID</th>
+
+                </tr>
+                {% for log in logs %}
+                {% if log.status == 'unsuccessful' %}
+                    <tr style="cursor: pointer;" onclick="redirect('{{log.queueId}}')">
+                        <td>{{log.source}}</td>
+                        <td>{{log.email}}</td>
+                        <td>{{log.status}}</td>
+                        <td>{{log.start_datetime}}</td>
+                        <td>{{log.queueId}}</td>
+                    </tr>
+                {% endif %}
+                {% endfor %}
+            </table>
+
+            <table id="waiting-logs" style="display: none;">
+                <tr>
+                    <th>Source URL</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Start Date & Time</th>
+                    <th>Queue ID</th>
+
+                </tr>
+                {% for log in logs %}
+                {% if log.status == 'waiting' %}
+                    <tr style="cursor: pointer;" onclick="redirect('{{log.queueId}}')">
+                        <td>{{log.source}}</td>
+                        <td>{{log.email}}</td>
+                        <td>{{log.status}}</td>
+                        <td>{{log.start_datetime}}</td>
+                        <td>{{log.queueId}}</td>
+                    </tr>
+                {% endif %}
+                {% endfor %}
+            </table>
+
+            <table id="running-logs" style="display: none;">
+                <tr>
+                    <th>Source URL</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Start Date & Time</th>
+                    <th>Queue ID</th>
+
+                </tr>
+                {% for log in logs %}
+                {% if log.status == 'running' or log.status == 'waiting for video' or log.status == 'uploading video' %}
+                    <tr style="cursor: pointer;" onclick="redirect('{{log.queueId}}')">
+                        <td>{{log.source}}</td>
+                        <td>{{log.email}}</td>
+                        <td>{{log.status}}</td>
+                        <td>{{log.start_datetime}}</td>
+                        <td>{{log.queueId}}</td>
+                    </tr>
+                {% endif %}
+                {% endfor %}
+            </table>
+            
+            
+            <!-- {% endif %} -->
         </div>
     </div>
 </body>

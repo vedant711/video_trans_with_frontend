@@ -10,6 +10,8 @@ class Logs(models.Model):
     callback_url = models.CharField(max_length=2000)
     queueId = models.CharField(max_length=2000)
     user = models.CharField(max_length=200)
+    email = models.CharField(max_length=2000)
+
 
     class Meta:
         managed = True
