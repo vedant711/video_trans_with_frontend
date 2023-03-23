@@ -47,50 +47,54 @@ ext = 'mp4'
 # print(ext)
 # log1.path = f'../{id}.{ext}'
 # log1.save()
-urllib.request.urlretrieve(url, f'{id}.mp4')
-path = f'../{id}.mp4'
-cursor.execute(f'UPDATE logs SET path="{path}" WHERE id = {id}')
-mydb.commit()
-# os.chdir('/root/video_trans/translation_tool/trans/')
-os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/')
+try:
+    urllib.request.urlretrieve(url, f'{id}.mp4')
+    path = f'../{id}.mp4'
+    cursor.execute(f'UPDATE logs SET path="{path}" WHERE id = {id}')
+    mydb.commit()
+    # os.chdir('/root/video_trans/translation_tool/trans/')
+    os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/')
 
-if len(running) < 5:
-    if path != '':
-        # sql = "INSERT INTO logs (status,start_datetime,path) VALUES (%s, %s, %s)"
-        # d= str(datetime.now())
-        # val = ("running", d, path)
-        # cursor.execute(sql, val)
-        # mydb.commit()
+    if len(running) < 5:
+        if path != '':
+            # sql = "INSERT INTO logs (status,start_datetime,path) VALUES (%s, %s, %s)"
+            # d= str(datetime.now())
+            # val = ("running", d, path)
+            # cursor.execute(sql, val)
+            # mydb.commit()
 
-        # cursor.execute(f"SELECT id FROM logs WHERE start_datetime='{d}'")
-        # id = cursor.fetchone()[0]
+            # cursor.execute(f"SELECT id FROM logs WHERE start_datetime='{d}'")
+            # id = cursor.fetchone()[0]
 
-        cursor.execute(f'UPDATE logs SET status="running" WHERE id = {id}')
-        mydb.commit()
+            cursor.execute(f'UPDATE logs SET status="running" WHERE id = {id}')
+            mydb.commit()
 
-        process = f"python3 main.py {path} {id} &"
+            process = f"python3 main.py {path} {id} &"
 
-        # subprocess.call(['gnome-terminal', '-x', process])
-        # process1 = process.split()
-        # subprocess.PIPE()
-        # p = subprocess.Popen(process,shell=True, stdin=subprocess.PIPE,
-        #                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # t = Thread(target=proc, args=(path,))
-        # t.start()
-        # print(process)
-        p=subprocess.Popen(process,shell=True)
-        # stdout, stderr = p.communicate()
-        # We have started the program, and can suspend this interpreter
-        quit(0)
-    # print('Hi')
-else:
-    if path!='':
-        # sql = "INSERT INTO logs (status,start_datetime,path) VALUES (%s, %s, %s)"
-        # d= str(datetime.now())
-        # val = ("waiting", d, path)
-        # cursor.execute(sql, val)
-        # mydb.commit()
-        cursor.execute(f'UPDATE logs SET status="waiting" WHERE id = {id}')
-        mydb.commit()
+            # subprocess.call(['gnome-terminal', '-x', process])
+            # process1 = process.split()
+            # subprocess.PIPE()
+            # p = subprocess.Popen(process,shell=True, stdin=subprocess.PIPE,
+            #                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # t = Thread(target=proc, args=(path,))
+            # t.start()
+            # print(process)
+            p=subprocess.Popen(process,shell=True)
+            # stdout, stderr = p.communicate()
+            # We have started the program, and can suspend this interpreter
+            quit(0)
+        # print('Hi')
+    else:
+        if path!='':
+            # sql = "INSERT INTO logs (status,start_datetime,path) VALUES (%s, %s, %s)"
+            # d= str(datetime.now())
+            # val = ("waiting", d, path)
+            # cursor.execute(sql, val)
+            # mydb.commit()
+            cursor.execute(f'UPDATE logs SET status="waiting" WHERE id = {id}')
+            mydb.commit()
+except:
+    cursor.execute(f'UPDATE logs SET status="unsuccessful" WHERE id = {id}')
+    mydb.commit()
 
 

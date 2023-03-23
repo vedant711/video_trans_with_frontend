@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,HttpResponse
 from django.http import JsonResponse
 from django.contrib import messages
+import re
 # import urllib.request
 from django.views.decorators.csrf import csrf_exempt
 # import gdown
@@ -277,9 +278,37 @@ def track(request,queueId):
         if log.user == str(request.user):
             id = log.id
             file = open(f'/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded/logs/log{id}.txt','r',encoding='utf-8')
-            output = list(file.readlines())
+            output = file.read()
             file.close()
-            context = {'output':output,'queueId':queueId}
+            begin,end=False,False
+            if 'Process Begins' in output:begin = True
+            if 'Process Ends' in output:end = True
+
+            # begin=True if 'Process Begins' in output else False
+            # else:begin=False
+            translation_begin,translation_end,tts_begin,tts_end = False,False,False,False
+            langs = ['hi','fr','zh-CN','pt','de','pl','ru','es','sv','el']
+            trans_start,trans_end,textts_start,textts_end = {},{},{},{}
+            # for line in output:
+            for lang in langs:
+                if f'{lang} translation start = ' in output:
+                    if not translation_begin: translation_begin = True
+                    trans_start[lang]=re.findall(f'{lang} translation start = .*',output)[0].replace(f'{lang} translation start = ','')
+                    # trans_start[lang] = x
+                if f'{lang} translation complete = ' in output:
+                    if not translation_end: translation_end = True
+                    trans_end[lang]=re.findall(f'{lang} translation complete = .*',output)[0].replace(f'{lang} translation complete = ','')
+                    # trans_end[lang] = x
+                if f'{lang} tts start = ' in output:
+                    if not tts_begin: tts_begin=True
+                    textts_start[lang] = re.findall(f'{lang} tts start = .*',output)[0].replace(f'{lang} tts start = ','')
+                if f'{lang} tts complete = ' in output:
+                    if not tts_end: tts_end=True
+                    textts_end[lang] = re.findall(f'{lang} tts complete = .*',output)[0].replace(f'{lang} tts complete = ','')
+            # context = {'output':output,'queueId':queueId}
+            # print(tts_begin)
+            output = {'begin':begin,'translation_begin':translation_begin,'translation_end':translation_end,'langs':langs,'tts_begin':tts_begin,'tts_end':tts_end,'end':end}
+            context = {'queueId':queueId,'output':output,'trans_start':trans_start,'trans_end':trans_end,'textts_start':textts_start,'textts_end':textts_end,}
         else:
             messages.info(request,"Bad Request!\nYou cannot access other user's request.")
             return redirect(f'/view/{request.user}')
