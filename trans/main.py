@@ -53,7 +53,7 @@ def getToken():
 
 
 if __name__ == '__main__':
-    blockPrint()
+    # blockPrint()
     os.chdir('static/uploaded')
 
     mydb = mysql.connector.connect(
@@ -64,7 +64,7 @@ if __name__ == '__main__':
         database="translator1",
     )
 
-    mycursor = mydb.cursor()
+    mycursor = mydb.cursor(buffered=True)
 
     mycursor.execute("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
     orig_path = sys.argv[1]
@@ -290,6 +290,9 @@ if __name__ == '__main__':
         exit_flag =1
         try:shutil.rmtree(f'../output{id}')
         except:pass
+        waiting = waiting_requests(mycursor)
+        running = running_requests(mycursor)
+        running_num = len(running)
         if waiting != [] and running_num < 5:
             limit_available = 5-running_num
             # print(waiting[])
@@ -319,6 +322,9 @@ if __name__ == '__main__':
         mydb.commit()
         try:shutil.rmtree(f'../output{id}')
         except:pass
+        waiting = waiting_requests(mycursor)
+        running = running_requests(mycursor)
+        running_num = len(running)
         if waiting != [] and running_num < 5:
             limit_available = 5-running_num
             # print(waiting[])

@@ -22,8 +22,8 @@ def recog_chunk(chunks,silence_index,exit_flag):
                 while True:
                     try:
                         audio_listened = r.listen(source)
-                        print('audio heard')
-                        print(audio_listened)
+                        # print('audio heard')
+                        # print(audio_listened)
                         break
                     except PermissionError:
                         # print('Thank You for Using Our Service')
@@ -40,8 +40,8 @@ def recog_chunk(chunks,silence_index,exit_flag):
                 try:
                     rec = r.recognize_google(audio_listened)
                     # sents = segmenter.segment(rec)
-                    print('audio_recognized')
-                    print(rec)
+                    # print('audio_recognized')
+                    # print(rec)
                     # rec1 = '. '.join(sents)
                     os.remove(f"./chunk{i}.wav")
                     final_row = [rec]
