@@ -12,15 +12,17 @@
 </head>
 <body>
     <div id="root">
-    <form action="/" method="post" class="container">
+        <div class="container">
+    <form action="/" method="post" style="width: 100%;">
         {% csrf_token %}
         <h1>Login</h1>
-        <input type="text" name="username" placeholder="Enter Username">
-        <input type="password" name="password" placeholder="Enter Password">
+        <input type="text" name="username" placeholder="Enter Username"><br>
+        <input type="password" name="password" placeholder="Enter Password"><br>
         <input type="submit" value="Submit">
-        <a href="create"><button>Create</button></a>
+        
     </form>
-    
+    <a href="create"><button>Create</button></a>
+</div>
 </div>
 </body>
 </html>

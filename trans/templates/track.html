@@ -20,7 +20,7 @@
         const show_trans_begin=() => {
             document.getElementById('trans_begin').style.display='block';
             document.getElementById('trans_begin_show').style.display='none';
-            document.getElementById('trans_begin_hr').style.height='120px';
+            document.getElementById('trans_begin_hr').style.height='135px';
         }
         const hide_trans_begin=() => {
             document.getElementById('trans_begin').style.display='none';
@@ -31,7 +31,7 @@
         const show_trans_end=() => {
             document.getElementById('trans_end').style.display='block';
             document.getElementById('trans_end_show').style.display='none';
-            document.getElementById('trans_end_hr').style.height='120px';
+            document.getElementById('trans_end_hr').style.height='135px';
         }
         const hide_trans_end=() => {
             document.getElementById('trans_end').style.display='none';
@@ -42,7 +42,7 @@
         const show_tts_begin=() => {
             document.getElementById('tts_begin').style.display='block';
             document.getElementById('tts_begin_show').style.display='none';
-            document.getElementById('tts_begin_hr').style.height='120px';
+            document.getElementById('tts_begin_hr').style.height='135px';
         }
         const hide_tts_begin=() => {
             document.getElementById('tts_begin').style.display='none';
@@ -53,7 +53,7 @@
         const show_tts_end=() => {
             document.getElementById('tts_end').style.display='block';
             document.getElementById('tts_end_show').style.display='none';
-            document.getElementById('tts_end_hr').style.height='120px';
+            document.getElementById('tts_end_hr').style.height='135px';
         }
         const hide_tts_end=() => {
             document.getElementById('tts_end').style.display='none';
@@ -69,7 +69,7 @@
         {% if output.begin %}
             <table cellspacing="0" style="zoom:90%">
                 <tr>
-                    <td align="center"><i class="fa fa-check" style="padding: 12px; background-color: #FF4B2B; color: white; font-size: 20px;"></i><hr style="width:0px;height:50px; border: solid 2px #FF4B2B;"></td>
+                    <td align="center" valign="top"><i class="fa fa-check" style="padding: 12px; background-color: #FF4B2B; color: white; font-size: 20px;"></i><hr style="width:0px;height:50px; border: solid 2px #FF4B2B;"></td>
                     <td valign="top"><p style="padding: 12px;">Process Begun</p></td>
                 </tr>
                 {% if output.translation_begin %}
@@ -87,6 +87,7 @@
                                 <p style="font-size: 10px;">pl: {{trans_start.pl}}</p>
                                 <p style="font-size: 10px;">ru: {{trans_start.ru}}</p>
                                 <p style="font-size: 10px;">sv: {{trans_start.sv}}</p>
+                                <p style="font-size: 10px;">zh: {{trans_start.zh}}</p>
                                 <p style="font-size: 10px;cursor: pointer;color: #FF4B2B;" id="trans_begin_hide" onclick="hide_trans_begin()">Hide Details <i class="fa fa-caret-up"></i></p>
                             </div>
                         </td>
@@ -106,6 +107,7 @@
                                     <p style="font-size: 10px;">pl: {{trans_end.pl}}</p>
                                     <p style="font-size: 10px;">ru: {{trans_end.ru}}</p>
                                     <p style="font-size: 10px;">sv: {{trans_end.sv}}</p>
+                                    <p style="font-size: 10px;">zh: {{trans_start.zh}}</p>
                                     <p style="font-size: 10px;cursor: pointer;color: #FF4B2B;" id="trans_end_hide" onclick="hide_trans_end()">Hide Details <i class="fa fa-caret-up"></i></p>
                                 </div>
                             </td>
@@ -126,6 +128,7 @@
                                         <p style="font-size: 10px;">pl: {{textts_start.pl}}</p>
                                         <p style="font-size: 10px;">ru: {{textts_start.ru}}</p>
                                         <p style="font-size: 10px;">sv: {{textts_start.sv}}</p>
+                                        <p style="font-size: 10px;">zh: {{trans_start.zh}}</p>
                                         <p style="font-size: 10px;cursor: pointer;color: #FF4B2B;" id="tts_begin_hide" onclick="hide_tts_begin()">Hide Details <i class="fa fa-caret-up"></i></p>
 
                                     </div>
@@ -147,6 +150,7 @@
                                     <p style="font-size: 10px;">pl: {{textts_end.pl}}</p>
                                     <p style="font-size: 10px;">ru: {{textts_end.ru}}</p>
                                     <p style="font-size: 10px;">sv: {{textts_end.sv}}</p>
+                                    <p style="font-size: 10px;">zh: {{trans_start.zh}}</p>
                                     <p style="font-size: 10px;cursor: pointer;color: #FF4B2B;" id="tts_end_hide" onclick="hide_tts_end()">Hide Details <i class="fa fa-caret-up"></i></p>
 
                                     </div>
@@ -159,39 +163,39 @@
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <td align="center"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
+                                    <td align="center" valign="top"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
                                     <td valign="top"><p style="padding: 15px;color: grey;">Merging Audio Files</p></td>
                                 </tr>
                             {% endif %}
                         {% else %}
                             <tr>
-                                <td align="center"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
+                                <td align="center" valign="top"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
                                 <td valign="top"><p style="padding: 15px; color: grey;">Converting from TTS</p></td>
                             </tr>
                         {% endif %}
                         {% else %}
                             <tr>
-                                <td align="center"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
+                                <td align="center" valign="top"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
                                 <td valign="top"><p style="padding: 15px; color: grey;">TTS Not Started</p></td>
                             </tr>
                         {% endif %}
                     {% else %}
                         <tr>
-                            <td align="center"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div><hr style="width:0px;height:50px; border: dashed 2px #FF4B2B;"></td>
+                            <td align="center" valign="top"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div><hr style="width:0px;height:50px; border: dashed 2px #FF4B2B;"></td>
                             <td valign="top"><p style="padding: 15px; color: grey;">Translating</p></td>
                         </tr>
                         <tr>
-                            <td align="center"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
+                            <td align="center" valign="top"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
                             <td valign="top"><p style="padding: 15px; color: grey;">TTS Not Started</p></td>
                         </tr>
                     {% endif %}
                 {% else %}
                     <tr>
-                        <td align="center"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div><hr style="width:0px;height:50px; border: dashed 2px #FF4B2B;"></td>
+                        <td align="center" valign="top"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div><hr style="width:0px;height:50px; border: dashed 2px #FF4B2B;"></td>
                         <td valign="top"><p style="padding: 15px; color: grey;">Translation Not Started</p></td>
                     </tr>
                     <tr>
-                        <td align="center"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
+                        <td align="center" valign="top"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
                         <td valign="top"><p style="padding: 15px; color: grey;">TTS Not Started</p></td>
                     </tr>
                     <!-- <tr>
@@ -203,16 +207,16 @@
         {% else %}
             <table>
                 <tr>
-                    <td align="center"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div><hr style="width:0px;height:100px; border: dashed 2px #FF4B2B;"></td>
+                    <td align="center" valign="top"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div><hr style="width:0px;height:100px; border: dashed 2px #FF4B2B;"></td>
                     <td valign="top"><p style="padding: 15px;color: grey;">Process Not Started</p></td>
 
                 </tr>
                 <tr>
-                    <td align="center"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div><hr style="width:0px;height:100px; border: dashed 2px #FF4B2B;"></td>
+                    <td align="center" valign="top"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div><hr style="width:0px;height:100px; border: dashed 2px #FF4B2B;"></td>
                     <td valign="top"><p style="padding: 15px;color: grey;">Translation Not Started</p></td>
                 </tr>
                 <tr>
-                    <td align="center"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
+                    <td align="center" valign="top"><div style="height: 44px; border: solid 4px #FF4B2B; color: white; font-size: 50px; width: 44px;"></div></td>
                     <td valign="top"><p style="padding: 15px; color: grey;">TTS Not Started</p></td>
                 </tr>
             </table>

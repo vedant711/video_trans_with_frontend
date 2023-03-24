@@ -293,18 +293,22 @@ def track(request,queueId):
             for lang in langs:
                 if f'{lang} translation start = ' in output:
                     if not translation_begin: translation_begin = True
-                    trans_start[lang]=re.findall(f'{lang} translation start = .*',output)[0].replace(f'{lang} translation start = ','')
+                    if lang=='zh-CN': trans_start['zh'] =re.findall(f'{lang} translation start = .*',output)[0].replace(f'{lang} translation start = ','')
+                    else:trans_start[lang]=re.findall(f'{lang} translation start = .*',output)[0].replace(f'{lang} translation start = ','')
                     # trans_start[lang] = x
                 if f'{lang} translation complete = ' in output:
                     if not translation_end: translation_end = True
-                    trans_end[lang]=re.findall(f'{lang} translation complete = .*',output)[0].replace(f'{lang} translation complete = ','')
+                    if lang=='zh-CN':trans_end['zh']=re.findall(f'{lang} translation complete = .*',output)[0].replace(f'{lang} translation complete = ','')
+                    else:trans_end[lang]=re.findall(f'{lang} translation complete = .*',output)[0].replace(f'{lang} translation complete = ','')
                     # trans_end[lang] = x
                 if f'{lang} tts start = ' in output:
                     if not tts_begin: tts_begin=True
-                    textts_start[lang] = re.findall(f'{lang} tts start = .*',output)[0].replace(f'{lang} tts start = ','')
+                    if lang=='zh-CN':textts_start['zh'] = re.findall(f'{lang} tts start = .*',output)[0].replace(f'{lang} tts start = ','')
+                    else:textts_start[lang] = re.findall(f'{lang} tts start = .*',output)[0].replace(f'{lang} tts start = ','')
                 if f'{lang} tts complete = ' in output:
                     if not tts_end: tts_end=True
-                    textts_end[lang] = re.findall(f'{lang} tts complete = .*',output)[0].replace(f'{lang} tts complete = ','')
+                    if lang=='zh-CN':textts_end['zh'] = re.findall(f'{lang} tts complete = .*',output)[0].replace(f'{lang} tts complete = ','')
+                    else:textts_end[lang] = re.findall(f'{lang} tts complete = .*',output)[0].replace(f'{lang} tts complete = ','')
             # context = {'output':output,'queueId':queueId}
             # print(tts_begin)
             output = {'begin':begin,'translation_begin':translation_begin,'translation_end':translation_end,'langs':langs,'tts_begin':tts_begin,'tts_end':tts_end,'end':end}
