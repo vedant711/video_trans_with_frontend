@@ -312,7 +312,7 @@ def track(request,queueId):
             # context = {'output':output,'queueId':queueId}
             # print(tts_begin)
             output = {'begin':begin,'translation_begin':translation_begin,'translation_end':translation_end,'langs':langs,'tts_begin':tts_begin,'tts_end':tts_end,'end':end}
-            context = {'queueId':queueId,'output':output,'trans_start':trans_start,'trans_end':trans_end,'textts_start':textts_start,'textts_end':textts_end,}
+            context = {'queueId':queueId,'output':output,'trans_start':trans_start,'trans_end':trans_end,'textts_start':textts_start,'textts_end':textts_end,'user':request.user}
         else:
             messages.info(request,"Bad Request!\nYou cannot access other user's request.")
             return redirect(f'/view/{request.user}')
