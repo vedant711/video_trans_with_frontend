@@ -19,6 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User,auth
 from django.contrib.auth import logout
 from threading import Thread
+from django.contrib.admin.views.decorators import staff_member_required
 import subprocess
 import hashlib
 import json
@@ -78,6 +79,7 @@ def user_token_view(request):
     except:
         return HttpResponse('Already created the API key')
 
+@staff_member_required(login_url='/')
 def signup1(request):
     foo(request)
     if request.method=="POST":
@@ -87,16 +89,15 @@ def signup1(request):
         # if pass1==pass2:
         if User.objects.filter(username=username).exists():
             messages.info(request,'OOPS! Usename already taken')
-            return render(request,'create_acc.html')            
+            # return render(request,'create_acc.html')            
         else:
             user=User.objects.create_user(username=username,password=pass1)
             user.save()
             messages.info(request,'Account created successfully!!')
-            return render(request,'login.html')
-    return render(request,'create_acc.html')
+            # return render(request,'login.html')
+        return redirect('/adminportal')
 
 def index(request):
-    foo(request)
     if request.user.is_authenticated: return redirect(f'/view/{request.user}')
     else:
         if request.method=='POST':
@@ -108,7 +109,10 @@ def index(request):
                 # return render(request,'index.html')
                 # print(user)
                 # return redirect('/auth_token')
-                return redirect(f'/view/{user}')
+                if request.user.is_staff:
+                    return redirect(f'/adminportal')
+                else:
+                    return redirect(f'/view/{user}')
             else:
                 messages.info(request,'Invalid credentials')
                 return render(request,'login.html')
@@ -320,11 +324,37 @@ def track(request,queueId):
         context = {'output':'','queueId':queueId}
     return render(request,'track.html',context)
 
+@csrf_exempt
 @login_required(login_url='/')
 def indi_page(request,user):
     foo(request)
-    logs = Logs.objects.filter(user=request.user).all()
-    context={'logs':logs}
+    context = {}
+    if request.method == 'POST':
+    # logs = Logs.objects.filter(user=request.user).all()
+        try:
+            dt = request.POST['date']
+            status = request.POST['status']
+        except:
+            # print(request.body)
+            # data = request.body.decode()
+            from ast import literal_eval
+            data = literal_eval(request.body.decode('utf-8'))
+            dt = data['date']
+            status = data['status']
+        # print(dt)
+        # print(status)
+        if status=='all':
+            logs = Logs.objects.filter(user=request.user,start_datetime__icontains=dt).all()
+            # print(logs)
+        elif status =='running':
+            logs = Logs.objects.filter(user=request.user,status__in=['running','waiting for video','uploading video'],start_datetime__icontains=dt).all()
+        else:
+            logs = Logs.objects.filter(user=request.user,status=status,start_datetime__icontains=dt).all()
+        # for log in logs:
+        #     print(log.start_datetime)
+        # print(logs)
+        context={'logs':logs,'dt':dt,'status':status}
+    # print(logs)
     # print(logs)
     return render(request,'indi_page.html',context)
 
@@ -342,3 +372,14 @@ def error404(request,exception):
 
 def error500(request):
     return render(request,'500.html')
+
+@staff_member_required(login_url='/')
+def admin_portal(request):
+    all_users = User.objects.all()
+    context={'user':request.user,'all':all_users}
+    return render(request,'admin.html',context)
+
+@staff_member_required(login_url='/')
+def remove_user(request,user):
+    User.objects.get(username=user).delete()
+    return redirect('/adminportal')

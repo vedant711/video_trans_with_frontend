@@ -5,10 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'indi.css' %}">
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
-
-
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/searchbuilder/1.4.1/js/dataTables.searchBuilder.min.js"></script>
+    <script src="https://cdn.datatables.net/datetime/1.4.0/js/dataTables.dateTime.min.js"></script>
+    <!-- <link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"> -->
+    <!-- <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script> -->
     <title>Home | Translator</title>
 </head>
 <body>
@@ -16,9 +20,42 @@
         const redirect = (queueId) => {
             window.location = '/track/'+queueId
         }
-        setTimeout(function(){
-            window.location.reload(1);
-        }, 30000);
+        setInterval(function(){
+            $.ajax({
+                url:'/view/{{user}}',
+                type:'POST',
+                // date:'{{dt}}',
+                // status:'{{status}}',
+                data:JSON.stringify({date:'{{dt}}',status:'{{status}}'})
+
+            });
+            console.log('data fetched')
+        },5000);
+
+        const formatDate = (date) => {
+            var pattern = '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})\.(\d{6})/'
+            var dt = new Date(date.replace(pattern,'$3-$2-$1'));
+            // console.log(dt)
+            let day=dt.getDate(); let month=dt.getMonth(); let year=dt.getFullYear(); let hrs=dt.getHours(); let min=dt.getMinutes(); let sec=dt.getSeconds();
+            let ap=''
+            if (hrs>12) {ap = 'PM';hrs=hrs%12}
+            else if(hrs===12) {ap='PM'}
+            else{ap='AM'}
+            if (day<10) {day = `0${day}`}
+            if (month<10) {month = `0${month}`}
+            if (hrs<10) {hrs = `0${hrs}`}
+            if (min<10) {min = `0${min}`}
+            if (sec<10) {sec = `0${sec}`}
+            // console.log(day)
+            
+
+            let formatted = `${day}/${month}/${year} ${hrs}:${min} ${ap}`;
+            document.getElementById(date).innerHTML = formatted;
+        }
+        
+        // setTimeout(function(){
+        //     window.location.reload(1);
+        // }, 5000);
         
 
         // document.getElementById('success').onclick = () => {
@@ -122,11 +159,48 @@
             // // }
 
         }
+        $(document).ready(function() {
+            $('#unsuccess-logs').removeAttr('width').DataTable( {
+                // dom: 'Qlfrtip',
+                // scrollY:        "300px",
+                // scrollX:        '1000px',
+                scrollCollapse: true,
+                // paging:         false,
+                // columnDefs: [
+                //     { width: 200, targets: 0 }
+                // ],
+                // fixedColumns: true
+            });
+            // console.log('{{status}}')
+            if ('{{status}}'==='all') {
+                document.getElementById('all-status').setAttribute('selected',true)
+                // console.log('all')
+            }
+            if ('{{status}}'==='successful') {
+                document.getElementById('success-status').setAttribute('selected',true)
+                console.log('success')
+            }if ('{{status}}'==='unsuccessful') {
+                document.getElementById('unsuccess-status').setAttribute('selected',true)
+            }if ('{{status}}'==='running') {
+                document.getElementById('running-status').setAttribute('selected',true)
+            }if ('{{status}}'==='waiting') {
+                document.getElementById('waiting-status').setAttribute('selected',true)
+            }
+        });
+
+        // $.ajax('/view/{{user}}',
+        //     {
+        //         date:'{{dt}}',
+        //         status:'{{status}}'
+        //     }
+        // )
+        
     </script>
     <div id="root">
         <div class="header">
-        <a href="/upload"><p>Translate Video</p></a>
+        <p onclick="document.getElementById('upload-form').style.display='block'">Translate Video</p>
         <!-- <a href="/indi-log/{{user}}"><p>Logs for Videos</p></a> -->
+        <h3>Welcome {{user|upper}}</h3>
         <a href="/logout"><p>Logout</p></a>
 
         
@@ -138,115 +212,87 @@
             <p>{{m}}</p>
             {% endfor %}
             {% endif %}
-            <h1>Welcome {{user}}</h1>
-            <h2>Have a look at all your requests</h2>
-            <div class="choose">
-                <p id="success" onclick="select(this.id)" class="selected">Successful</p>
-                <p id="unsuccess" onclick="select(this.id)">Unsuccessful</p>
-                <p id="running" onclick="select(this.id)">Running</p>
-                <p id="waiting" onclick="select(this.id)">Waiting</p>
-            </div>
-            <!-- <table id="table">
+            <form id="log-form" action="/view/{{user}}" method="post" style="width: 100%; display: flex; justify-content: space-between;">
+                {% csrf_token %}
+                {% if dt and status %}
+                <input type="date" name="date" id="" value="{{dt}}">
+                <select name="status" id="status-select">
+                    <option value="" disabled>Select Status</option>
+                    <option value="all" id="all-status">All</option>
+                    <option value="successful" id="success-status">Successful</option>
+                    <option value="unsuccessful" id="unsuccess-status">Unsuccessful</option>
+                    <option value="running" id="running-status">Running</option>
+                    <option value="waiting" id="waiting-status">Waiting</option>
+                </select>
+                {% else %}
+                <input type="date" name="date" id="" value="{{dt}}">
+                <select name="status" id="" value="{{status}}">
+                    <option value="" disabled selected>Select Status</option>
+                    <option value="all">All</option>
+                    <option value="successful">Successful</option>
+                    <option value="unsuccessful">Unsuccessful</option>
+                    <option value="running">Running</option>
+                    <option value="waiting">Waiting</option>
+                </select>
+                {% endif %}
+                <input type="submit" value="Search">
+            </form>
+
+            {% if logs %}
+            <!-- <div class="lower-logs"> -->
+            <h2>Logs</h2>
+            <table id="unsuccess-logs" class="display nowrap" style="width:100%">
+                <thead>
                 <tr>
+                    <th></th>
                     <th>Source URL</th>
                     <th>Email</th>
-                    <th>Status</th>
                     <th>Start Date & Time</th>
                     <th>Queue ID</th>
+                    <th>Details</th>
 
                 </tr>
-            </table> -->
-            <!-- {% if logs %} -->
-            <table id="success-logs" style="display: block;">
-                <tr>
-                    <th>Source URL</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Start Date & Time</th>
-                    <th>Queue ID</th>
-
-                </tr>
+            </thead>
+            <tbody>
                 {% for log in logs %}
-                {% if log.status == 'successful' %}
-                    <tr style="cursor: pointer;" onclick="redirect('{{log.queueId}}')">
+                    <tr>
+                        {% if log.status == 'unsuccessful' %}
+                        <td align="left"><div title="unsuccessful" style="border-radius: 50%; width:10px;height:10px;background-color:red " ></div></td>
+                        {% elif log.status == 'successful' %}
+                        <td align="left"><div title="successful" style="border-radius: 50%; width:10px;height:10px;background-color:greenyellow "></div></td>
+                        {% elif log.status == 'waiting' %}
+                        <td align="left"><div title="waiting" style="border-radius: 50%; width:10px;height:10px;background-color:yellow "></div></td>
+                        {% elif log.status == 'running' or log.status == 'waiting for video' or log.status == 'uploading video' %}
+                        <td align="left"><div title="running" style="border-radius: 50%; width:10px;height:10px;background-color:blue "></div></td>
+                        {% endif %}
                         <td>{{log.source}}</td>
                         <td>{{log.email}}</td>
-                        <td>{{log.status}}</td>
-                        <td>{{log.start_datetime}}</td>
+                        <td id="{{log.start_datetime}}"><script>formatDate('{{log.start_datetime}}')</script></td>
                         <td>{{log.queueId}}</td>
+                        <td><button  onclick="redirect('{{log.queueId}}')">Details</button></td>
                     </tr>
-                {% endif %}
                 {% endfor %}
+            </tbody>
+
             </table>
+        <!-- </div> -->
+            {% endif %}
 
-            <table id="unsuccess-logs" style="display: none;">
-                <tr>
-                    <th>Source URL</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Start Date & Time</th>
-                    <th>Queue ID</th>
-
-                </tr>
-                {% for log in logs %}
-                {% if log.status == 'unsuccessful' %}
-                    <tr style="cursor: pointer;" onclick="redirect('{{log.queueId}}')">
-                        <td>{{log.source}}</td>
-                        <td>{{log.email}}</td>
-                        <td>{{log.status}}</td>
-                        <td>{{log.start_datetime}}</td>
-                        <td>{{log.queueId}}</td>
-                    </tr>
-                {% endif %}
-                {% endfor %}
-            </table>
-
-            <table id="waiting-logs" style="display: none;">
-                <tr>
-                    <th>Source URL</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Start Date & Time</th>
-                    <th>Queue ID</th>
-
-                </tr>
-                {% for log in logs %}
-                {% if log.status == 'waiting' %}
-                    <tr style="cursor: pointer;" onclick="redirect('{{log.queueId}}')">
-                        <td>{{log.source}}</td>
-                        <td>{{log.email}}</td>
-                        <td>{{log.status}}</td>
-                        <td>{{log.start_datetime}}</td>
-                        <td>{{log.queueId}}</td>
-                    </tr>
-                {% endif %}
-                {% endfor %}
-            </table>
-
-            <table id="running-logs" style="display: none;">
-                <tr>
-                    <th>Source URL</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Start Date & Time</th>
-                    <th>Queue ID</th>
-
-                </tr>
-                {% for log in logs %}
-                {% if log.status == 'running' or log.status == 'waiting for video' or log.status == 'uploading video' %}
-                    <tr style="cursor: pointer;" onclick="redirect('{{log.queueId}}')">
-                        <td>{{log.source}}</td>
-                        <td>{{log.email}}</td>
-                        <td>{{log.status}}</td>
-                        <td>{{log.start_datetime}}</td>
-                        <td>{{log.queueId}}</td>
-                    </tr>
-                {% endif %}
-                {% endfor %}
-            </table>
+        </div>
+    </div>
+    <div class="overlay" style="display: none;" id="upload-form">
+        <div class="hello">
+        <form action="/upload" method="post" id="upload-form-overlay">
+            <p class="close" onclick="document.getElementById('upload-form').style.display='none'"></p>
             
-            
-            <!-- {% endif %} -->
+            <h1>Video Translation Tool</h1>
+        <!-- <input type="file" name="file" id="" placeholder="Upload Video"> -->
+        <!-- {{form}} -->
+        {% csrf_token %}
+            <input type="text" name="url" id="url" placeholder="Enter the URL">
+            <input type="text" name="email" id="email" placeholder="Enter your Email">
+            <input type="submit" value="Submit">
+        </form>
         </div>
     </div>
 </body>

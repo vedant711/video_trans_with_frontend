@@ -13,7 +13,12 @@
 <body>
     <div id="root">
         <div class="container">
-    <form action="/" method="post" style="width: 100%;">
+            {% if messages %}
+            {% for m in messages %}
+            <p>{{m}}</p>
+            {% endfor %}
+            {% endif %}
+    <form action="/" method="post"  style="width: 100%;">
         {% csrf_token %}
         <h1>Login</h1>
         <input type="text" name="username" placeholder="Enter Username"><br>
@@ -21,8 +26,9 @@
         <input type="submit" value="Submit">
         
     </form>
-    <a href="create"><button>Create</button></a>
+    <!-- <a href="create"><button>Create</button></a> -->
 </div>
+    
 </div>
 </body>
 </html>

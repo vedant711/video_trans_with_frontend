@@ -489,3 +489,64 @@ input[type=text],input[type=password] {
   background-color: #FF4B2B;
   color: white;
 }
+
+/* .dataTables_wrapper {
+  margin-top: 50px;
+}
+
+.dtsb-logicContainer button{
+  padding: 12px;
+  border-radius: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+} */
+
+#create-form-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1;
+  width: 100%;
+  /* min-height: 100vh; */
+  font-family: Consolas, monaco, monospace;
+  background-color: white;
+  /* background: linear-gradient(to right, #ff4b2ba0, #ff416db0); */
+  /* color: white; */
+  /* padding-bottom: 25px; */
+  /* position: absolute; */
+  /* bottom: 0; */
+  /* padding-bottom: 100%; */
+  /* margin-bottom: 0; */
+  /* min-height: 149px; */
+  border-radius: 10px;
+  /* height: 100%; */
+  padding: 20px;
+  overflow: hidden;
+  
+}
+
+/* .even {
+  background-color: #eee;
+} */
+
+table.dataTable tr.even { background-color: #eee; }
+
+#user_table td {
+  padding:5px;
+  border-bottom:solid 1px #bababa;
+
+}
+
+#user_table th {
+  padding-bottom: 10px;
+  border-bottom:solid 1px #939393;
+  cursor: pointer;
+}
+
+/* select,input[type=search] {
+  background-color: #eee;
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 10%;
+} */
