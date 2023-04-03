@@ -343,8 +343,8 @@ def indi_page(request,user):
             data = literal_eval(request.body.decode('utf-8'))
             dt = data['date']
             status = data['status']
-        print(dt)
-        print(status)
+        # print(dt)
+        # print(status)
         if status=='all':
             logs = Logs.objects.filter(user=request.user,start_datetime__icontains=dt).all()
             # print(logs)
@@ -354,7 +354,7 @@ def indi_page(request,user):
             logs = Logs.objects.filter(user=request.user,status=status,start_datetime__icontains=dt).all()
         # for log in logs:
         #     print(log.start_datetime)
-        print(logs)
+        # print(logs)
         context={'logs':logs,'dt':dt,'status':status}
     # print(logs)
     # print(logs)
