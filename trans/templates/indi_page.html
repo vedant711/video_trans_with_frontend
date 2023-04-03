@@ -241,13 +241,13 @@
             {% if logs %}
             <!-- <div class="lower-logs"> -->
             <h2>Logs</h2>
-            <table id="unsuccess-logs" class="display nowrap" style="width:100%">
+            <center><table id="unsuccess-logs" class="display nowrap" style="width:100%">
                 <thead>
                 <tr>
                     <th></th>
                     <th>Source URL</th>
                     <th>Email</th>
-                    <th>Start Date & Time</th>
+                    <th>Time</th>
                     <th>Queue ID</th>
                     <th>Details</th>
 
@@ -265,16 +265,16 @@
                         {% elif log.status == 'running' or log.status == 'waiting for video' or log.status == 'uploading video' %}
                         <td align="left"><div title="running" style="border-radius: 50%; width:10px;height:10px;background-color:blue "></div></td>
                         {% endif %}
-                        <td>{{log.source}}</td>
+                        <td align="center">{{log.source}}</td>
                         <td>{{log.email}}</td>
                         <td id="{{log.start_datetime}}"><script>formatDate('{{log.start_datetime}}')</script></td>
-                        <td>{{log.queueId}}</td>
+                        <td>{{log.queueId|make_list|slice:':8'|join:''}}....</td>
                         <td><button  onclick="redirect('{{log.queueId}}')">Details</button></td>
                     </tr>
                 {% endfor %}
             </tbody>
 
-            </table>
+            </table></center>
         <!-- </div> -->
             {% endif %}
 

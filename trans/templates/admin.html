@@ -48,15 +48,15 @@
             <table id="user_table">
                 <thead>
                     <tr>
-                        <td>User</td>
-                        <td>Remove</td>
+                        <td align="center"><center>User</center></td>
+                        <td align="center"><center>Remove</center></td>
                     </tr>
                 </thead>
                 <tbody>
                     {% for user in all %}
                         <tr>
-                            <td>{{user}}</td>
-                            <td><a href="/remove/{{user}}"><button>Remove</button></a></td>
+                            <td valign="middle">{{user}}</td>
+                            <td valign="middle"><a href="/remove/{{user}}"><button>Remove</button></a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

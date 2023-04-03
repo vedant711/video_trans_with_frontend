@@ -79,6 +79,7 @@ def user_token_view(request):
     except:
         return HttpResponse('Already created the API key')
 
+@csrf_exempt
 @staff_member_required(login_url='/')
 def signup1(request):
     foo(request)
@@ -97,6 +98,7 @@ def signup1(request):
             # return render(request,'login.html')
         return redirect('/adminportal')
 
+@csrf_exempt
 def index(request):
     if request.user.is_authenticated: return redirect(f'/view/{request.user}')
     else:
@@ -341,8 +343,8 @@ def indi_page(request,user):
             data = literal_eval(request.body.decode('utf-8'))
             dt = data['date']
             status = data['status']
-        # print(dt)
-        # print(status)
+        print(dt)
+        print(status)
         if status=='all':
             logs = Logs.objects.filter(user=request.user,start_datetime__icontains=dt).all()
             # print(logs)
@@ -352,7 +354,7 @@ def indi_page(request,user):
             logs = Logs.objects.filter(user=request.user,status=status,start_datetime__icontains=dt).all()
         # for log in logs:
         #     print(log.start_datetime)
-        # print(logs)
+        print(logs)
         context={'logs':logs,'dt':dt,'status':status}
     # print(logs)
     # print(logs)

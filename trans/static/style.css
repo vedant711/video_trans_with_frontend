@@ -525,6 +525,10 @@ input[type=text],input[type=password] {
   
 }
 
+#user_table {
+  padding-top: 20px ;
+}
+
 /* .even {
   background-color: #eee;
 } */
@@ -534,6 +538,7 @@ table.dataTable tr.even { background-color: #eee; }
 #user_table td {
   padding:5px;
   border-bottom:solid 1px #bababa;
+  /* vertical-align: middle; */
 
 }
 
@@ -550,3 +555,16 @@ table.dataTable tr.even { background-color: #eee; }
     margin: 8px 0;
     width: 10%;
 } */
+
+.dataTables_paginate,.dataTables_info {
+  margin-top: 20px;
+}
+
+.dataTables_wrapper table td {
+  vertical-align: middle;
+}
+
+.dataTables_wrapper table td button{
+  /* vertical-align: middle; */
+  margin-top: 0px;
+}
