@@ -19,6 +19,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'translation_tool.settings')
 #     sys.path.append(path_home)
 
 application = get_wsgi_application()
+app=application
 #
 #
 #
