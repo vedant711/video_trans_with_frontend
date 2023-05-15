@@ -5,6 +5,8 @@ import sys
 # from threading import Thread
 import os
 import urllib.request
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 def running_requests(cursor):
@@ -39,7 +41,8 @@ cursor.execute(f'SELECT * FROM logs WHERE id={id}')
 url = cursor.fetchone()[4]
 
 
-os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded')
+# os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded')
+os.chdir(os.path.join(BASE_DIR,'trans/static/uploaded'))
 # print(os.getcwd())
 # urllib.request.urlretrieve(url, f'{id}.mp4')
 # gdown.download(url,f'{id}.mp4',quiet=True)
@@ -53,7 +56,9 @@ try:
     cursor.execute(f'UPDATE logs SET path="{path}" WHERE id = {id}')
     mydb.commit()
     # os.chdir('/root/video_trans/translation_tool/trans/')
-    os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/')
+    # os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/')
+    os.chdir(os.path.join(BASE_DIR,'trans/'))
+
 
     if len(running) < 5:
         if path != '':

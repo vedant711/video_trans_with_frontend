@@ -15,6 +15,8 @@ import requests
 import json
 from dotenv.main import load_dotenv
 import random
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 def waiting_requests(cursor):
@@ -55,8 +57,10 @@ def new_process(mycursor):
     waiting = waiting_requests(mycursor)
     running = running_requests(mycursor)
     running_num = len(running)
-    if os.getcwd() != '/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans':
-        os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans')
+    # if os.getcwd() != '/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans':
+    if os.getcwd() != str(BASE_DIR)+'/trans':
+        # os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans')
+        os.chdir(os.path.join(BASE_DIR,'trans'))
     if waiting != [] and running_num < 5:
         limit_available = 5-running_num
         if len(waiting) > limit_available:
@@ -128,7 +132,8 @@ if __name__ == '__main__':
         threads_audio(id,langs,silence_index,exit_flag)
         merge_audio_threads(langs,silence_index)
         merge(id,langs,orig_path)
-        if os.path.exists(f'/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded/output{id}/final_trans.mkv'):
+        # if os.path.exists(f'/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded/output{id}/final_trans.mkv'):
+        if os.path.exists(os.path.join(BASE_DIR,f'trans/static/uploaded/output{id}/final_trans.mkv')):
             mycursor.execute(f'UPDATE logs SET status="uploading video" WHERE id={int(id)}')
             mydb.commit()
             mycursor.execute(f"SELECT * FROM logs WHERE id={id}")
@@ -195,11 +200,13 @@ if __name__ == '__main__':
             try:shutil.rmtree(f'output{id}')
             except:pass
             mydb.commit()
-        if os.getcwd() == '/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded':
+        # if os.getcwd() == '/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded':
+        if os.getcwd() == os.path.join(BASE_DIR,'trans/static/uploaded'):
             txt = open(f'logs/log{id}.txt','a+',encoding='utf-8')
             txt.write('Process Ends\n')
             txt.close()
-        elif os.getcwd() == f'/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded/audio_analyze{id}':
+        # elif os.getcwd() == f'/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded/audio_analyze{id}':
+        elif os.getcwd() == os.path.join(BASE_DIR,f'trans/static/uploaded/audio_analyze{id}'):
             txt = open(f'../logs/log{id}.txt','a+',encoding='utf-8')
             txt.write('Process Ends\n')
             txt.close()

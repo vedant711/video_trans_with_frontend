@@ -23,9 +23,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 import subprocess
 import hashlib
 import json
-# from humanize import naturalsize
-
-# Create your views here.
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 def handle_uploaded_file(f,id,ext):
     print('Uploading...')
@@ -56,7 +55,8 @@ def video_processing(url,id):
         # print(id)
         # print(url)
         # os.chdir('/root/video_trans/translation_tool/trans')
-        os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans')
+        os.chdir(os.path.join(BASE_DIR,'trans'))
+        # os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans')
 
 
         process = f'python3 pivot_control.py {id} &'
@@ -128,7 +128,8 @@ def upload(request):
         url = request.POST['url']
         email = request.POST['email']
         # os.chdir('/root/video_trans/translation_tool')
-        os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool')
+        # os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool')
+        os.chdir(BASE_DIR)
 
         log = Logs()
         log.start_datetime= str(datetime.now())
@@ -210,7 +211,8 @@ def api(request):
                 # if auth_key == token.key:
                 keys = ['60ea74a6edd466cf71852da61e618f470ed35208']
                 if auth_key in keys:
-                    os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool')
+                    # os.chdir('/Volumes/My Passport/Webmyne Internship/video_trans_tool')
+                    os.chdir(BASE_DIR)
                     log = Logs()
                     log.start_datetime= str(datetime.now())
                     st_dt = log.start_datetime
@@ -283,7 +285,8 @@ def track(request,queueId):
         # print(type(request.user),type(log.user))
         if log.user == str(request.user):
             id = log.id
-            file = open(f'/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded/logs/log{id}.txt','r',encoding='utf-8')
+            # file = open(f'/Volumes/My Passport/Webmyne Internship/video_trans_tool/trans/static/uploaded/logs/log{id}.txt','r',encoding='utf-8')
+            file = open(os.path.join(BASE_DIR,f'trans/static/uploaded/logs/log{id}.txt'),'r',encoding='utf-8')
             output = file.read()
             file.close()
             begin,end=False,False

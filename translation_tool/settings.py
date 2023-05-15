@@ -112,7 +112,7 @@ import logging
 SECRET_KEY = 'django-insecure-+9h9ez7irsc+8d6cbxy%%9)&-2a*_e3x4rl0d!iaw6!tr@wpk_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
