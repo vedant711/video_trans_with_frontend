@@ -156,6 +156,10 @@ if __name__ == '__main__':
                     files=files
                 )
                 url_id = r.json()['id']
+                perm_url = f'https://www.googleapis.com/drive/v3/files/{url_id}/permissions?sendNotificationEmail=false'
+                payload = '''{"role":"reader", "type":"user", "emailAddress":"%s"}'''%email
+                headers = {'Authorization': f'Bearer {api_key}', 'Content-Type':'application/json'}
+                permResponse = requests.post(perm_url, data=payload, headers=headers)
                 output_url = f'https://drive.google.com/uc?id={url_id}'
                 print(callback_url,email)
                 if callback_url != '' and callback_url!=None:
